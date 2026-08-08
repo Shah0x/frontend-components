@@ -1,0 +1,103 @@
+:root {
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --brand-primary: #3182ce; /* TODO: replace with design system token when sync-tokens script is fixed */
+}
+
+/* Container setup for card list */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  /* background-color: #f7fafc; /* TEMP: debug layout alignment */
+}
+
+/* The parent context targeting container queries */
+.card-wrapper {
+  container-type: inline-size;
+  container-name: card-container;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effects - FIXME: need to disable this on touch devices later to avoid sticky hover states */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border-color: var(--brand-primary);
+}
+
+.card__image-placeholder {
+  width: 100%;
+  height: 150px;
+  background-color: #edf2f7;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.card__description {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Container query for wider contexts - changes layout to row style when container is wide enough */
+@container card-container (min-width: 480px) {
+  .card {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .card__image-placeholder {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .card__content {
+    flex-grow: 1;
+  }
+}
+
+/* Fallback for browsers that do not support container queries yet (e.g. older Firefox/Safari) */
+@supports not (container-type: inline-size) {
+  /* Commenting out this debug border for production merge */
+  /* .card-wrapper { border: 1px dashed orange; } */
+
+  /* Fallback relies on desktop media query instead */
+  @media (min-width: 768px) {
+    .card {
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+    .card__image-placeholder {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 0;
+    }
+  }
+}
