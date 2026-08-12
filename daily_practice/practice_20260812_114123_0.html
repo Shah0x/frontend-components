@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Accordion Prototype</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text-dark: #1f2937;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: var(--text-dark);
+        }
+
+        .accordion {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-trigger {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 16px;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .accordion-trigger:hover {
+            background-color: #f9fafb;
+        }
+
+        .accordion-trigger:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: -2px;
+        }
+
+        .accordion-panel {
+            /* TODO: Get CSS transition working with height: auto. 
+               Currently just toggling display which feels a bit abrupt. */
+            display: none;
+            padding: 0 16px 16px 16px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .accordion-panel[aria-hidden="false"] {
+            display: block;
+        }
+
+        .icon {
+            transition: transform 0.2s ease;
+        }
+
+        .accordion-trigger[aria-expanded="true"] .icon {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="accordion" id="faq-accordion">
+        <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-1" id="trigger-1">
+                How long does shipping take?
+                <span class="icon">▼</span>
+            </button>
+            <div class="accordion-panel" id="panel-1" aria-labelledby="trigger-1" aria-hidden="true">
+                Standard shipping takes 3-5 business days. Express shipping is available at checkout and takes 1-2 business days.
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-2" id="trigger-2">
+                Can I return my item?
+                <span class="icon">▼</span>
+            </button>
+            <div class="accordion-panel" id="panel-2" aria-labelledby="trigger-2" aria-hidden="true">
+                Yes, we offer a 30-day money-back guarantee. The item must be in its original packaging and unused condition.
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <!-- FIXME: Need to check if id naming convention is fine for multiple components -->
+            <button class="accordion-trigger" aria-expanded="false" aria-controls="panel-3" id="trigger-3">
+                Do you ship internationally?
+                <span class="icon">▼</span>
+            </button>
+            <div class="accordion-panel" id="panel-3" aria-labelledby="trigger-3" aria-hidden="true">
+                Yes, we ship to over 50 countries. Shipping fees and custom duties will apply depending on your region.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const accordion = document.getElementById('faq-accordion');
+            
+            accordion.addEventListener('click', (event) => {
+                const trigger = event.target.closest('.accordion-trigger');
+                
+                // Early exit if we didn't click a trigger
+                if (!trigger) return;
+
+                // debug log
+                // console.log('Clicked accordion trigger:', trigger.id);
+
+                const panelId = trigger.getAttribute('aria-controls');
+                const panel = document.getElementById(panelId);
+                const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+                // Toggle states
+                trigger.setAttribute('aria-expanded', !isExpanded);
+                panel.setAttribute('aria-hidden', isExpanded);
+
+                // Optional: Close other panels (Single Accordion Behavior)
+                // TODO: Make this behavior configurable via data-attribute
+                const allTriggers = accordion.querySelectorAll('.accordion-trigger');
+                allTriggers.forEach(otherTrigger => {
+                    if (otherTrigger !== trigger) {
+                        otherTrigger.setAttribute('aria-expanded', 'false');
+                        const otherPanelId = otherTrigger.getAttribute('aria-controls');
+                        document.getElementById(otherPanelId).setAttribute('aria-hidden', 'true');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
