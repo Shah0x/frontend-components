@@ -1,8 +1,15 @@
 # frontend-components
 
-Automated practice repository generating contextual code snippets.
+A collection of reusable, responsive UI components, custom React hooks, and modern frontend layouts built for scalable web applications.
 
-**Latest Milestone**: 6 successful code generations.
-**Last Updated**: 2026-08-12 11:41:23
+## Architecture Overview
 
-This repository is maintained autonomously by the Silent Boom system.
+- **Primary Language:** HTML
+- **Core Engine:** Built on Nexus-Enterprise v3.0 modular runtime.
+
+## Getting Started
+
+```bash
+npm install
+npm run dev
+```
