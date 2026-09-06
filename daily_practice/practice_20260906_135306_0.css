@@ -1,0 +1,94 @@
+:root {
+  --primary-color: #6366f1;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --bg-card: #ffffff;
+  --gap-md: 1.5rem;
+  
+  /* fluid type scale: min 1rem, max 1.25rem based on viewport */
+  --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.25rem);
+}
+
+/* DEBUG ONLY: comment out before staging! */
+/* * { outline: 1px dashed rgba(255, 0, 0, 0.3); } */
+
+.dashboard-grid {
+  display: grid;
+  /* Using auto-fit instead of auto-fill to stretch items to fill remaining space */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--gap-md);
+  padding: var(--gap-md);
+}
+
+/* Define the container context for child queries */
+.card-wrapper {
+  container-type: inline-size;
+  container-name: card-container;
+  width: 100%;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card__title {
+  font-size: calc(var(--font-size-base) * 1.2);
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.card__desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Container Query - changes layout to horizontal if there's enough room */
+@container card-container (min-width: 480px) {
+  .card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card__header {
+    flex: 1;
+  }
+
+  /* TODO: Add a nice thumbnail/icon styles for desktop layout */
+  .card__media {
+    display: block;
+    width: 80px;
+    height: 80px;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    order: -1; /* Move to the left on wider layouts */
+    margin-right: 1rem;
+  }
+}
+
+/* FIXME: Safari < 16 doesn't fully support container queries. 
+   Should I write a flexbox fallback or just let them have the vertical layout? 
+   Decided: vertical is fine as a mobile-first fallback anyway. */
+@supports not (container-type: inline-size) {
+  /* optional fallback code here if QA complains */
+}
