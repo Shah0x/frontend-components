@@ -1,0 +1,107 @@
+/* TODO: Migrate these variables to a global variables.css file once design tokens are locked in */
+:root {
+  --primary-color: #3b82f6;
+  --text-main: #1f2937;
+  --bg-card: #ffffff;
+  --gap-md: 1.5rem;
+  --radius-lg: 12px;
+  /* FIXME: check if we need a darker shadow for better contrast on gray backgrounds */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --transition-fast: 0.2s ease-in-out;
+}
+
+/* Temporary reset for this component namespace - should be in global base */
+.card-grid-container *, 
+.card-grid-container *::before, 
+.card-grid-container *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.card-grid-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  /* border: 2px dashed red; -- debug: check grid alignment on parent */
+}
+
+.card-grid {
+  display: grid;
+  /* auto-fill works better than auto-fit here to prevent cards stretching too wide on massive screens */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--gap-md);
+}
+
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  /* Hardcoding hover shadow state for now, needs variable extraction later */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card__image-wrapper {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio is awesome, no more absolute padding hacks! */
+  aspect-ratio: 16 / 9;
+  background-color: #e5e7eb; /* fallback skeleton color during image load */
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Pushes footer to the bottom if content is short */
+}
+
+.card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.card__description {
+  font-size: 0.95rem;
+  color: #4b5563; /* Refactor: map to a --text-muted variable once global tokens exist */
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.card__footer {
+  margin-top: auto; /* double safety for aligning bottom links */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Quick helper class, might delete later if design system goes with filled buttons */
+.btn-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* TODO: Add media queries for ultra-small mobile screens (< 320px) where grid minmax of 280px might overflow */
