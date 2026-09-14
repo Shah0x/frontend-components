@@ -1,0 +1,81 @@
+/* Card Grid Container */
+.card-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  
+  /* Setting up container context for children */
+  container-type: inline-size;
+  container-name: card-grid;
+}
+
+/* Base Card Styling */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  /* FIXME: outline looks weird on Firefox focus, need custom focus-visible style */
+  /* border: 2px solid red; -- temp debug positioning layout */
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.card-hero {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #f1f5f9;
+}
+
+.card-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.75rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Container Queries - Switch to horizontal layout when space allows */
+@container card-grid (min-width: 600px) {
+  .product-card {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .card-hero {
+    width: 40%;
+    height: 100%;
+    /* Quick fix for collapsed images when flex-direction changes */
+    min-height: 220px; 
+  }
+
+  .card-content {
+    width: 60%;
+  }
+}
+
+/* TODO: Add high-contrast mode media query for better accessibility */
+/* @media (forced-colors: active) { ... } */
