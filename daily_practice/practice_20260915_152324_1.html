@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accordion Component Practice</title>
+  <style>
+    /* TODO: replace colors with CSS variables when integrated into main theme */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f9fafb;
+      color: #111827;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .accordion {
+      width: 100%;
+      max-width: 600px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      padding: 1rem;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 1rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #374151;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+
+    .accordion-trigger:hover, .accordion-trigger:focus {
+      background-color: #f3f4f6;
+      outline: none; /* FIXME: Need a better focus ring design for accessibility */
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out; /* Note: Dynamic max-height set via JS scrollHeight */
+      padding: 0 1rem;
+    }
+
+    .accordion-content-inner {
+      padding-bottom: 1rem;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .accordion-icon {
+      transition: transform 0.2s;
+      font-size: 0.8rem;
+    }
+
+    .active .accordion-icon {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="accordion" id="faq-accordion">
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="content-1">
+        How does the billing cycle work?
+        <span class="accordion-icon">▼</span>
+      </button>
+      <div id="content-1" class="accordion-content" aria-hidden="true">
+        <div class="accordion-content-inner">
+          Our service is billed on a monthly recurring basis. You can cancel at any time through your dashboard without additional fees.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" aria-controls="content-2">
+        Can I request a refund?
+        <span class="accordion-icon">▼</span>
+      </button>
+      <div id="content-2" class="accordion-content" aria-hidden="true">
+        <div class="accordion-content-inner">
+          Yes, we offer a 14-day money-back guarantee if you're not satisfied with the product. Just reach out to our support team.
+        </div>
+      </div>
+    </div>
+
+    <!-- TODO: Add dynamic API data loading here eventually instead of static HTML markup -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const accordion = document.getElementById('faq-accordion');
+      
+      accordion.addEventListener('click', (event) => {
+        const trigger = event.target.closest('.accordion-trigger');
+        if (!trigger) return;
+
+        const item = trigger.closest('.accordion-item');
+        const content = item.querySelector('.accordion-content');
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+
+        // console.log('Current state expanded:', isExpanded); // DBG
+
+        // Collapse other open items (accordion behavior)
+        // TODO: make "allowMultiple" option config if we want to change this behavior later
+        const allItems = accordion.querySelectorAll('.accordion-item');
+        allItems.forEach(i => {
+          if (i !== item) {
+            const otherTrigger = i.querySelector('.accordion-trigger');
+            const otherContent = i.querySelector('.accordion-content');
+            otherTrigger.setAttribute('aria-expanded', 'false');
+            otherContent.setAttribute('aria-hidden', 'true');
+            otherContent.style.maxHeight = null;
+            i.classList.remove('active');
+          }
+        });
+
+        // Toggle selected item
+        if (isExpanded) {
+          trigger.setAttribute('aria-expanded', 'false');
+          content.setAttribute('aria-hidden', 'true');
+          content.style.maxHeight = null;
+          item.classList.remove('active');
+        } else {
+          trigger.setAttribute('aria-expanded', 'true');
+          content.setAttribute('aria-hidden', 'false');
+          // Using scrollHeight for accurate dynamic height transition
+          content.style.maxHeight = content.scrollHeight + 'px';
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
